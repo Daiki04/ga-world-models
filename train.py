@@ -9,8 +9,7 @@ import copy
 import random
 
 # A: Action space, L: Latent space, R: Recurrent space, RED: Reduced size
-ASIZE, LSIZE, RSIZE, RED_SIZE, SIZE =\
-    3, 32, 256, 64, 64
+ASIZE, LSIZE, RSIZE, RED_SIZE, SIZE = 3, 32, 256, 64, 64
 
 # 画像の前処理：1. PILイメージに変換、2. 64x64にリサイズ、3. テンソルに変換
 transform = transforms.Compose([
@@ -25,10 +24,11 @@ class RolloutGenerator(object):
     :attr device: VAE、MDRNN、コントローラーの実行に使用されるデバイス
     :attr time_limit: ロールアウトは最大time_limitタイムステップを持つ
     """
+
     def __init__(self, device, time_limit, discrete_VAE):
         """ vae、rnn、コントローラ、環境を構築 """
-
-        self.env = gym.make('CarRacing-v0') # 環境：CarRacing-v0
+        ASIZE, LSIZE, RSIZE, RED_SIZE, SIZE = 3, 32, 256, 64, 64
+        self.env = gym.make('CarRacing-v2', render_mode='rgb_array', domain_randomize=False) # 環境：CarRacing-v2
         
         self.device = device # デバイス
 
@@ -87,11 +87,9 @@ class RolloutGenerator(object):
 
         with torch.no_grad():
             
-            self.env = gym.make('CarRacing-v0') # 環境：CarRacing-v0
+            self.env = gym.make('CarRacing-v2', render_mode='rgb_array', domain_randomize=False) # 環境：CarRacing-v2
 
-            obs = self.env.reset() # 環境のリセット
-
-            self.env.render('rgb_array') # 環境の描画設定
+            obs, _ = self.env.reset() # 環境のリセット
 
             hidden = [
                 torch.zeros(1, RSIZE)#.to(self.device) # 隠れ状態の初期化
@@ -109,7 +107,7 @@ class RolloutGenerator(object):
                 #Gas: Real valued in [0, 1]
                 #Break: Real valued in [0, 1]
 
-                obs, reward, done, _ = self.env.step(action) # 行動を実行し、報酬を受け取る：obs(3, 64, 64), reward, done, info
+                obs, reward, done, _, _ = self.env.step(action) # 行動を実行し、報酬を受け取る：obs(3, 64, 64), reward, done, info
                 
                 #報酬を得られなかった（コース外に出たなど）連続回数をカウント
                 neg_count = neg_count+1 if reward < 0.0 else 0   

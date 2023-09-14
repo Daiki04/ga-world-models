@@ -5,3 +5,5 @@ __pycache__
 dock.sh
 Dockerfile
 frames/
+*.p
+*.txt

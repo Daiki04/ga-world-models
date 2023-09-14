@@ -10,7 +10,8 @@ import gc # ガベージコレクション
 import copy # オブジェクトのコピー
 
 from multiprocessing import set_start_method # マルチプロセスの開始方法を設定
-set_start_method('forkserver', force=True) # マルチプロセスの開始方法を設定：親プロセスのインタプリタ, オブジェクト, モジュールなどを全てコピーする
+# set_start_method('forkserver', force=True) # マルチプロセスの開始方法を設定：親プロセスのインタプリタ, オブジェクト, モジュールなどを全てコピーする
+set_start_method('spawn', force=True) # マルチプロセスの開始方法を設定：親プロセスのインタプリタ, オブジェクト, モジュールなどを全てコピーする
 
 
 class GA:
