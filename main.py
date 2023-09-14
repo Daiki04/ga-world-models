@@ -8,6 +8,7 @@ import train
 from train import GAIndividual
 from ga import GA
 import random
+import warnings
 
 import multiprocessing
 
@@ -15,6 +16,7 @@ import multiprocessing
 #xvfb-run -a -s "-screen 0 1400x900x24 +extension RANDR" -- python3 main.py
 
 torch.set_num_threads(1)
+warnings.simplefilter('ignore')
 
 def main(argv):
 
